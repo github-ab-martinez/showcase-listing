@@ -1,4 +1,5 @@
 import React from "react";
+import Entry from "./Entry";
 import Pagination from "./Pagination";
 
 class EntryList extends React.Component {
@@ -27,7 +28,9 @@ class EntryList extends React.Component {
       <div className="entry-list">
         <ul>
           {this.state.currentEntries.map((entry) => (
-            <li key={entry.id}>{entry.title}</li>
+            <li key={entry.id}>
+              <Entry data={entry} />
+            </li>
           ))}
         </ul>
         <Pagination
