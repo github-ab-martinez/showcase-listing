@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { getEntriesData } from "../data/entries/entries";
+import EntryList from "../components/EntryList";
 
 export async function getStaticProps() {
   const entries = await getEntriesData();
@@ -21,11 +22,7 @@ export default function Home({ entries }) {
       </Head>
 
       <main className={styles.main}>
-        <ul>
-          {entries.map((entry) => (
-            <li key={entry.id}>{entry.title}</li>
-          ))}
-        </ul>
+        <EntryList entries={entries} />
       </main>
     </div>
   );
