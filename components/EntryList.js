@@ -26,13 +26,14 @@ class EntryList extends React.Component {
   render() {
     return (
       <div className="entry-list">
-        <ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {this.state.currentEntries.map((entry) => (
-            <li key={entry.id}>
+            <div className="rounded-sm shadow-md" key={entry.id}>
               <Entry data={entry} />
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
+
         <Pagination
           clickHandler={this.paginateEntries.bind(this)}
           currentPage={this.state.currentPage}

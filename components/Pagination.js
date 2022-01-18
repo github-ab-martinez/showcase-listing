@@ -1,13 +1,18 @@
 const Pagination = (props) => (
   <nav
+    className="flex justify-end"
     role="navigation"
     aria-label="Entries pagination navigation"
-    className="pagination"
   >
-    <ul>
+    <p className="mb-0 mr-5">
+      Page {props.currentPage} of {props.totalPages}
+    </p>
+    <ul className="flex justify-end">
       <li>
         <a
-          className={props.currentPage == 1 ? "disabled" : ""}
+          className={`bg-slate-400 p-3 rounded-sm mr-2 text-white ${
+            props.currentPage == 1 ? "pointer-events-none bg-slate-200" : ""
+          }`}
           href="#"
           role="button"
           aria-label="Load next page of entries"
@@ -21,7 +26,11 @@ const Pagination = (props) => (
       </li>
       <li>
         <a
-          className={props.currentPage == props.totalPages ? "disabled" : ""}
+          className={`bg-slate-400 p-3 rounded-sm text-white ${
+            props.currentPage == props.totalPages
+              ? "pointer-events-none bg-slate-200"
+              : ""
+          }`}
           href="#"
           role="button"
           aria-label="Load next page of entries"

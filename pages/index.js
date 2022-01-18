@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+// import styles from "../styles/Home.module.css";
 import { getEntriesData } from "../data/entries/entries";
 import EntryList from "../components/EntryList";
 
@@ -21,7 +21,11 @@ export default function Home({ entries }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main className="py-10">
+        <h1 className="text-2xl font-bold text-slate-700 my-10">
+          BigCommerce Listing Page
+        </h1>
+
         <EntryList entries={entries} />
       </main>
     </div>
