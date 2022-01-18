@@ -5,7 +5,7 @@ const Entry = (props) => (
       <Image
         className="mb-4"
         src={props.data.image.url}
-        alt="Picture of the author"
+        alt={`Image of ${props.data.image.title} website`}
         width={props.data.image.width}
         height={props.data.image.height}
       />
