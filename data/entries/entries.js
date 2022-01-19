@@ -1,15 +1,19 @@
-async function fetchWithRetry(url) {
+async function fetchWithRetry(url, retries) {
   let request = await fetch(`${url}`);
-
-  if (!request.ok) {
-    fetchWithRetry(url);
-  } else {
-    let json = await request.json();
-    if (json.error) {
-      fetchWithRetry(url);
+  if (retries >= 1) {
+    if (!request.ok) {
+      return fetchWithRetry(url, retries - 1);
     } else {
-      return json;
+      let json = await request.json();
+
+      if (json.error) {
+        return fetchWithRetry(url, retries - 1);
+      } else {
+        return json;
+      }
     }
+  } else {
+    return undefined;
   }
 }
 
@@ -35,7 +39,8 @@ async function getEntries(entryIds) {
   let entries = await Promise.all(
     entryIds.map(async (entryId) => {
       let entriesRequest = await fetchWithRetry(
-        `https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryById?id=${entryId}`
+        `https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryById?id=${entryId}`,
+        15
       );
 
       return entriesRequest;
@@ -47,6 +52,7 @@ async function getEntries(entryIds) {
 
 export async function getEntriesData() {
   let entryIds = undefined;
+
   do {
     entryIds = await getEntryIds();
   } while (!entryIds);
