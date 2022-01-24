@@ -15,7 +15,8 @@ const Pagination = (props) => (
           }`}
           href="#"
           role="button"
-          aria-label="Load next page of entries"
+          aria-label="Load previous page of entries"
+          aria-disabled={props.currentPage == 1 ? true : false}
           onClick={() => {
             props.clickHandler(props.currentPage - 1);
           }}
@@ -34,6 +35,7 @@ const Pagination = (props) => (
           href="#"
           role="button"
           aria-label="Load next page of entries"
+          aria-disabled={props.currentPage == props.totalPages ? true : false}
           onClick={() => {
             props.clickHandler(props.currentPage + 1);
           }}
