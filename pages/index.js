@@ -24,8 +24,11 @@ export default function Home({ entries }) {
         <h1 className="text-2xl font-bold text-slate-700 my-10">
           BigCommerce Listing Page
         </h1>
-
-        <EntryList entries={entries} />
+        {entries ? (
+          <EntryList entries={entries} />
+        ) : (
+          "There are no entries to display."
+        )}
       </main>
     </div>
   );
