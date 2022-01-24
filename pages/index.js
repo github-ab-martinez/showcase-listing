@@ -2,7 +2,7 @@ import Head from "next/head";
 import { getEntriesData } from "../data/entries/entries";
 import EntryList from "../components/EntryList";
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   const entries = await getEntriesData();
   return {
     props: {
