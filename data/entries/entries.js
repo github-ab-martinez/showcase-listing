@@ -1,63 +1,53 @@
-async function fetchWithRetry(url, retries) {
-  let request = await fetch(`${url}`);
-  if (retries >= 1) {
-    if (!request.ok) {
-      return fetchWithRetry(url, retries - 1);
-    } else {
-      let json = await request.json();
+const getEntryIdsUrl =
+  "https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryIds";
+const getEntryByIdUrl =
+  "https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryById?id=";
 
-      if (json.error) {
-        return fetchWithRetry(url, retries - 1);
+class FetchError extends Error {}
+
+async function fetchWithRetry(url, retries) {
+  try {
+    let request = await fetch(url);
+
+    if (!request.ok) {
+      throw new FetchError(`Request returned status: ${request.status}`);
+    } else {
+      let response = await request.json();
+      if (response.error) {
+        throw new FetchError(`Request returned error: ${response.error}`);
       } else {
-        return json;
+        return response;
       }
     }
-  } else {
-    return undefined;
-  }
-}
-
-async function getEntryIds() {
-  try {
-    let entryIdsRequest = await fetch(
-      "https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryIds"
-    );
-    if (!entryIdsRequest.ok)
-      throw new Error("Something went wrong with the server, please try again");
-
-    let ids = await entryIdsRequest.json();
-
-    if (ids.error) throw new Error(ids.error);
-
-    return ids;
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    if (error instanceof FetchError) {
+      console.log("fetchWithRetry error", error);
+      if (retries >= 1) {
+        return await fetchWithRetry(url, retries - 1);
+      } else {
+        return null;
+      }
+    } else {
+      throw error;
+    }
   }
 }
 
 async function getEntries(entryIds) {
   let entries = await Promise.all(
     entryIds.map(async (entryId) => {
-      let entriesRequest = await fetchWithRetry(
-        `https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryById?id=${entryId}`,
-        15
-      );
+      let entry = await fetchWithRetry(getEntryByIdUrl + entryId, 5);
 
-      return entriesRequest;
+      return entry;
     })
   );
 
-  return entries.filter((entry) => entry !== undefined);
+  return entries;
 }
 
 export async function getEntriesData() {
-  let entryIds = undefined;
-
-  do {
-    entryIds = await getEntryIds();
-  } while (!entryIds);
-
-  let entries = await getEntries(entryIds);
+  let entryIds = await fetchWithRetry(getEntryIdsUrl, 5);
+  let entries = !entryIds ? null : await getEntries(entryIds);
 
   return entries;
 }

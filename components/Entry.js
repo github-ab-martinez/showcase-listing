@@ -14,11 +14,10 @@ const Entry = (props) => (
       <h1 className="text-slate-700 font-medium text-lg mb-3">
         {props.data.title}
       </h1>
-      <p>{props.data.description}</p>
       <a
         className="bg-blue-800 p-2 rounded-sm text-white text-sm"
         href={props.data.url.value}
-        target={props.data.url.target}
+        target={props.data.url.target ? props.data.url.target : undefined}
       >
         Visit Site
       </a>
